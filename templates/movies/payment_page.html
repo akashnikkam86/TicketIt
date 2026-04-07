@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card mx-auto" style="max-width: 500px;">
+    <div class="card-header">
+      <h4>Payment for Booking #{{ booking.id }}</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>Movie:</strong> {{ booking.showtime.movie.title }}</p>
+      <p><strong>Showtime:</strong> {{ booking.showtime.start_time }}</p>
+      <p><strong>Seats:</strong> {% for seat in booking.seats.all %}{{ seat.number }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+      <p><strong>Number of Tickets:</strong> {{ booking.seats.count }}</p>
+      <p><strong>Total:</strong> ₹{{ booking.total_price }}</p>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success w-100">Pay (Dummy)</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %} 

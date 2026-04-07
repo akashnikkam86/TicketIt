@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - TicketIt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">My Bookings</h1>
+    
+    {% if bookings %}
+        <div class="row">
+            {% for booking in bookings %}
+            <div class="col-md-6 mb-4">
+                <div class="card booking-card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ booking.showtime.movie.title }}</h5>
+                        <p class="card-text">
+                            <strong>Theater:</strong> {{ booking.showtime.theater.name }}<br>
+                            <strong>Showtime:</strong> {{ booking.showtime.start_time|date:"F j, Y, g:i a" }}<br>
+                            <strong>Seats:</strong> 
+                            {% for seat in booking.seats.all %}
+                                Seat {{ seat.number }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}<br>
+                            <strong>Total Price:</strong> ₹{{ booking.total_price }}<br>
+                            <strong>Booking Time:</strong> {{ booking.booking_time|date:"F j, Y, g:i a" }}
+                        </p>
+                        <form method="post" action="{% url 'cancel_booking' booking.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to cancel this booking?');">Cancel</button>
+                        </form>
+                        <a href="{% url 'booking_invoice' booking.id %}" class="btn btn-primary btn-sm ms-2">View Invoice</a>
+                        <a href="{% url 'booking_invoice_pdf' booking.id %}" class="btn btn-success btn-sm ms-2"><i class="fas fa-file-pdf"></i> Download PDF</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You haven't made any bookings yet. <a href="{% url 'movie_list' %}">Browse movies</a> to book tickets.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

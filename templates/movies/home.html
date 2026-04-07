@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - TicketIt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Carousel Section -->
+    <div id="featuredMoviesCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="false">
+        <div class="carousel-inner">
+            {% for item in carousel_images %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <div class="d-flex justify-content-center align-items-center" style="height: 400px; background: #f7fafc; border-radius: 18px;">
+                    <img src="{{ item.image.url }}" class="d-block" alt="Carousel Image" style="max-height: 350px; border-radius: 12px; box-shadow: 0 4px 24px rgba(79,140,255,0.10);">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuredMoviesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuredMoviesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <!-- End Carousel Section -->
+    <h1 class="text-center mb-4">Welcome to TicketIt</h1>
+    <h2 class="mb-4">Latest Movies</h2>
+    <div class="row horizontal-scrollable-movie-row">
+        {% for movie in latest_movies %}
+        <div class="col-md-3 mb-4" style="min-width: 250px;">
+            <div class="card movie-card">
+                <a href="{% url 'movie_detail' movie.pk %}">
+                    <img src="{{ movie.poster.url }}" class="card-img-top movie-poster" alt="{{ movie.title }}">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text"><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script>
+// Drag-to-scroll for horizontal movie row
+const movieRow = document.querySelector('.horizontal-scrollable-movie-row');
+let isDown = false;
+let startX;
+let scrollLeft;
+
+if (movieRow) {
+    movieRow.addEventListener('mousedown', (e) => {
+        isDown = true;
+        movieRow.classList.add('active');
+        startX = e.pageX - movieRow.offsetLeft;
+        scrollLeft = movieRow.scrollLeft;
+    });
+    movieRow.addEventListener('mouseleave', () => {
+        isDown = false;
+        movieRow.classList.remove('active');
+    });
+    movieRow.addEventListener('mouseup', () => {
+        isDown = false;
+        movieRow.classList.remove('active');
+    });
+    movieRow.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - movieRow.offsetLeft;
+        const walk = (x - startX) * 2; // scroll-fast
+        movieRow.scrollLeft = scrollLeft - walk;
+    });
+}
+</script>
+{% endblock %} 

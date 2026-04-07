@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile - TicketIt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Profile</h2>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Account Info</legend>
+                            {{ u_form|crispy }}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">Contact Info</legend>
+                            {{ p_form|crispy }}
+                        </fieldset>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Update Profile</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Open the modal automatically
+    var seatModal = new bootstrap.Modal(document.getElementById('seatSelectionModal'));
+    seatModal.show();
+
+    // Seat selection logic
+    document.querySelectorAll('.seat-box').forEach(function(box) {
+        if (!box.classList.contains('booked')) {
+            box.addEventListener('click', function() {
+                const seatId = this.dataset.seatId;
+                const checkbox = document.querySelector('.seat-checkbox[value="' + seatId + '"]');
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected');
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Movies - TicketIt{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">All Movies</h1>
+    <div class="row">
+        {% for movie in movies %}
+        <div class="col-md-4 mb-4">
+            <div class="card movie-card">
+                <img src="{{ movie.poster.url }}" class="card-img-top movie-poster" alt="{{ movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">
+                        <strong>Rating:</strong> {{ movie.rating }}/10<br>
+                        <strong>Duration:</strong> {{ movie.duration }} minutes
+                    </p>
+                    <a href="{% url 'movie_detail' movie.pk %}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

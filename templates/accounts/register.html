@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register - TicketIt{% endblock %}
+
+{% block content %}
+<div class="auth-form">
+    <h2 class="text-center mb-4">Register</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary mt-3" type="submit">Sign Up</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <small class="text-muted">
+            Already have an account? <a href="{% url 'login' %}">Sign In</a>
+        </small>
+    </div>
+</div>
+
+<style>
+    .phone-warning {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+    }
+    .phone-warning.show {
+        display: block;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.querySelector('input[name="phone_number"]');
+        if (phoneInput) {
+            const warningDiv = document.createElement('div');
+            warningDiv.className = 'phone-warning';
+            warningDiv.textContent = 'Phone number should not exceed 10 digits';
+            phoneInput.parentNode.appendChild(warningDiv);
+
+            phoneInput.addEventListener('input', function(e) {
+                // Remove any non-digit characters for length check
+                const digitsOnly = this.value.replace(/\D/g, '');
+                
+                // If number starts with +91 or 91, remove it for length check
+                let numberToCheck = digitsOnly;
+                if (digitsOnly.startsWith('91')) {
+                    numberToCheck = digitsOnly.substring(2);
+                }
+
+                // Show warning if more than 10 digits (excluding country code)
+                if (numberToCheck.length > 10) {
+                    warningDiv.classList.add('show');
+                    // Trim the number to 10 digits (excluding country code)
+                    if (this.value.startsWith('+91')) {
+                        this.value = '+91' + numberToCheck.substring(2, 12);
+                    } else if (this.value.startsWith('91')) {
+                        this.value = '91' + numberToCheck.substring(2, 12);
+                    } else {
+                        this.value = numberToCheck.substring(0, 10);
+                    }
+                } else {
+                    warningDiv.classList.remove('show');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %} 

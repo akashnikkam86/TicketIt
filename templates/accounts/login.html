@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login - TicketIt{% endblock %}
+
+{% block content %}
+<div class="auth-form">
+    <h2 class="text-center mb-4">Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary mt-3" type="submit">Sign In</button>
+        </div>
+    </form>
+    <div class="text-center mt-3">
+        <small class="text-muted">
+            Need an account? <a href="{% url 'register' %}">Sign Up</a>
+        </small>
+    </div>
+</div>
+{% endblock %} 
